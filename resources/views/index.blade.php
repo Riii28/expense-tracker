@@ -21,7 +21,8 @@
                 </p>
 
                 <h2 class="mt-2 text-3xl font-bold text-green-600">
-                    Rp10.000.000
+                    Rp {{ number_format($totalIncome, 0, ',', '.') }}
+
                 </h2>
             </div>
 
@@ -31,7 +32,7 @@
                 </p>
 
                 <h2 class="mt-2 text-3xl font-bold text-red-600">
-                    Rp10.000.000
+                    Rp {{ number_format($totalExpense, 0, ',', '.') }}
                 </h2>
             </div>
 
@@ -41,7 +42,7 @@
                 </p>
 
                 <h2 class="mt-2 text-3xl font-bold">
-                    Rp10.000.000
+                    Rp {{ number_format($balance->amount, 0, ',', '.') }}
                 </h2>
             </div>
 
@@ -102,30 +103,29 @@
                         </thead>
 
                         <tbody class="divide-y divide-neutral-100">
-
+                            @forelse ($transactions as $transaction)
                             <tr class="hover:bg-neutral-50 transition">
                                 <td class="max-w-48 wrap-break-word px-6 py-4 font-medium">
-                                    Salary
+                                    {{ $transaction->description}}
                                 </td>
 
                                 <td class="px-6 py-4 text-neutral-600">
-                                    Work
+                                    {{ $transaction->category}}
                                 </td>
 
                                 <td class="px-6 py-4">
                                     <span
                                         class="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
-                                        Income
+                                        {{ $transaction->type}}
                                     </span>
                                 </td>
 
                                 <td class="px-6 py-4 text-right font-semibold text-green-600">
-                                    +Rp10.000.000
+                                    Rp {{ number_format($transaction->amount, 0, ',', '.') }}
                                 </td>
 
                                 <td class="px-6 py-4 text-neutral-500">
-                                    12 Jul 2026
-                                </td>
+                                    {{ $transaction->created_at->format('d M Y') }} </td>
 
                                 <td class="px-6 py-4 text-right space-x-3">
                                     <a href="#" class="text-sm font-medium text-neutral-700 hover:text-black">
@@ -137,40 +137,10 @@
                                     </a>
                                 </td>
                             </tr>
+                            @empty
+                            <p>Tidak ad</p>
 
-                            <tr class="hover:bg-neutral-50 transition">
-                                <td class="px-6 py-4 font-medium">
-                                    Dinner
-                                </td>
-
-                                <td class="px-6 py-4 text-neutral-600">
-                                    Food
-                                </td>
-
-                                <td class="px-6 py-4">
-                                    <span class="rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
-                                        Expense
-                                    </span>
-                                </td>
-
-                                <td class="px-6 py-4 text-right font-semibold text-red-600">
-                                    -Rp150.000
-                                </td>
-
-                                <td class="px-6 py-4 text-neutral-500">
-                                    11 Jul 2026
-                                </td>
-
-                                <td class="px-6 py-4 text-right space-x-3">
-                                    <a href="#" class="text-sm font-medium text-neutral-700 hover:text-black">
-                                        Edit
-                                    </a>
-
-                                    <a href="#" class="text-sm font-medium text-red-600 hover:text-red-700">
-                                        Delete
-                                    </a>
-                                </td>
-                            </tr>
+                            @endforelse
 
                         </tbody>
 
@@ -184,7 +154,7 @@
                         <span class="font-medium text-neutral-900">32</span> transactions
                     </p>
 
-                    {{-- {{ $transactions->links() }} --}}
+                    {{ $transactions->links() }}
 
                 </div>
 
