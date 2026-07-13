@@ -18,21 +18,31 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
     <x-ui.header />
 
     <section class="mx-auto mt-8 max-w-3xl px-6">
-        <form action="{{ route('transactions.store') }}" method="POST"
+        <form action="{{ route('transactions.update', $transaction->id) }}" method="POST"
             class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+
             @csrf
+            @method('PATCH')
+
+            <div class="border-b border-neutral-200 px-6 py-5">
+                <h1 class="text-2xl font-semibold text-neutral-900">
+                    Edit Transaction
+                </h1>
+
+                <p class="mt-1 text-sm text-neutral-500">
+                    Update the details of your transaction.
+                </p>
+            </div>
 
             <div class="space-y-6 p-6">
-
                 <div>
                     <label for="amount" class="mb-2 block text-sm font-medium text-neutral-700">
                         Amount
                     </label>
 
+                    <input id="amount" name="amount" type="number" min="1" step="0.01"
+                        value="{{ old('amount', $transaction->amount) }}" class="{{ $inputClass }}">
 
-                    <input id="amount" name="amount" type="number" min="1" step="0.01" value="{{ old('amount') }}"
-                        class="{{ $inputClass }}">
-                        
                     @error('amount')
                     <p class="mt-2 text-sm text-red-600">
                         {{ $message }}
@@ -46,7 +56,7 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
                     </label>
 
                     <textarea id="description" name="description" rows="4"
-                        class="{{ $inputClass }} resize-none">{{ old('description') }}</textarea>
+                        class="{{ $inputClass }} resize-none">{{ old('description', $transaction->description) }}</textarea>
 
                     @error('description')
                     <p class="mt-2 text-sm text-red-600">
@@ -64,8 +74,8 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
                         <option value="">Select category</option>
 
                         @foreach (TransactionCategory::cases() as $category)
-                        <option value="{{ $category->value }}" @selected(old('category')===$category->value)
-                            >
+                        <option value="{{ $category->value }}" @selected(old('category', $transaction->category->value)
+                            === $category->value)>
                             {{ $category->label() }}
                         </option>
                         @endforeach
@@ -87,8 +97,8 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
                         <option value="">Select type</option>
 
                         @foreach (TransactionType::cases() as $type)
-                        <option value="{{ $type->value }}" @selected(old('type')===$type->value)
-                            >
+                        <option value="{{ $type->value }}" @selected(old('type', $transaction->type->value) ===
+                            $type->value)>
                             {{ $type->label() }}
                         </option>
                         @endforeach
@@ -100,7 +110,6 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
                     </p>
                     @enderror
                 </div>
-
             </div>
 
             <div class="flex justify-end gap-3 border-t border-neutral-200 px-6 py-4">
@@ -109,8 +118,9 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
                     Cancel
                 </a>
 
-                <button type="submit" class="rounded-lg bg-neutral-900 px-4 py-2 text-white hover:bg-neutral-800">
-                    Save
+                <button type="submit"
+                    class="rounded-lg bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-800">
+                    Save Changes
                 </button>
             </div>
         </form>

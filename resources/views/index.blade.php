@@ -54,16 +54,25 @@
 
         <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
             <div class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <div class="border-b border-neutral-200 px-6 py-4 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold">
+                            Recent Transactions
+                        </h2>
 
-                <div class="border-b border-neutral-200 px-6 py-4">
-                    <h2 class="text-lg font-semibold">
-                        Recent Transactions
-                    </h2>
+                        <p class="mt-1 text-sm text-neutral-500">
+                            Manage your income and expenses.
+                        </p>
+                    </div>
 
-                    <p class="mt-1 text-sm text-neutral-500">
-                        Manage your income and expenses.
-                    </p>
+                    <div>
+                        <a href="{{ route('transactions.create') }}"
+                            class="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800">
+                            New Transaction
+                        </a>
+                    </div>
                 </div>
+
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-neutral-200">
@@ -128,20 +137,30 @@
                                     {{ $transaction->created_at->format('d M Y') }} </td>
 
                                 <td class="px-6 py-4 text-right space-x-3">
-                                    <a href="#" class="text-sm font-medium text-neutral-700 hover:text-black">
+                                    <a href="{{ route('transactions.edit', $transaction->id) }}"
+                                        class="text-sm font-medium text-neutral-700 hover:text-black">
                                         Edit
                                     </a>
 
-                                    <a href="#" class="text-sm font-medium text-red-600 hover:text-red-700">
-                                        Delete
-                                    </a>
+                                    <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST"
+                                        class="inline-flex">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                            class="text-sm font-medium text-red-600 hover:text-red-700">
+                                            Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @empty
-                            <p>Tidak ad</p>
-
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-neutral-500">
+                                    Transaction not available.
+                                </td>
+                            </tr>
                             @endforelse
-
                         </tbody>
 
                     </table>
@@ -149,13 +168,7 @@
 
                 <div class="flex items-center justify-between border-t border-neutral-200 px-6 py-4">
 
-                    <p class="text-sm text-neutral-500">
-                        Showing <span class="font-medium text-neutral-900">1–10</span> of
-                        <span class="font-medium text-neutral-900">32</span> transactions
-                    </p>
-
-                    {{ $transactions->links() }}
-
+                    {{ $transactions->withQueryString()->links() }}
                 </div>
 
             </div>

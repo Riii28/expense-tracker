@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Balance;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -25,12 +26,21 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'email' => 'ridho@gmail.com',
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('ridho.irvan'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function ($user) {
+            Balance::factory()->create([
+                'user_id' => $user->id,
+                'amount' => 0,
+            ]);
+        });
     }
 
     /**
@@ -38,7 +48,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

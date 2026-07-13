@@ -18,10 +18,17 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'float'],
+            'amount' =>  ['required', 'numeric', 'min:0.01'],
             'category' => ['required', Rule::enum(TransactionCategory::class)],
             'type' => ['required', Rule::enum(TransactionType::class)],
             'description' => ['required', 'string']
         ];
+    }
+
+    protected function passedValidation(): void
+    {
+        $this->merge([
+            'amount' => (float) $this->amount,
+        ]);
     }
 }

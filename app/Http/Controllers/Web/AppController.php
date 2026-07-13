@@ -6,12 +6,12 @@ use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Services\BalanceService;
 use App\Services\TransactionService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use phpDocumentor\Reflection\Types\This;
 
 class AppController extends Controller
 {
-    private string $appTitle = 'Expense Tracker';
-    private string $appDescription = 'Expense tracker for artisan';
 
     public function __construct(
         public TransactionService $trxService,
@@ -20,11 +20,9 @@ class AppController extends Controller
 
     public function index()
     {
-        $balanceId = Cookie::get('balance-id');
+        $balanceId = Auth::user()->balance->id;
 
-        if (empty($balanceId)) {
-            abort(404);
-        }
+        if (empty($balanceId)) abort(404);
 
         $balance = $this->balanceService->get($balanceId);
         $transactions = $this->trxService->getAll();
@@ -46,6 +44,20 @@ class AppController extends Controller
         return view('create', [
             'appTitle' => $this->appTitle,
             'appDescription' => $this->appDescription
+        ]);
+    }
+
+    public function edit(string $id)
+    {
+        $balanceId = Auth::user()->balance->id;
+
+        $transaction = $this->trxService->get($id, $balanceId);
+
+        return view('edit', [
+            'appTitle' => $this->appTitle,
+            'appDescription' => $this->appDescription,
+            'id' => $transaction->id,
+            'transaction' => $transaction,
         ]);
     }
 }

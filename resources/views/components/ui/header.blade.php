@@ -10,10 +10,19 @@
                 Home
             </a>
 
-            <a href="{{ route('transactions.create') }}"
-                class="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800">
-                Add Transaction
-            </a>
+            @auth
+            <form class="inline-flex" action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button
+                    class="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
+                    type="submit">Logout</button>
+            </form>
+            @endauth
+
+            @guest
+            <a class="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
+                href="{{ route('login') }}">Login</a>
+            @endguest
         </nav>
     </div>
 </header>
