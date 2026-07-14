@@ -10,10 +10,15 @@
     <main class="mx-auto my-8 flex max-w-md px-6">
         <section class="w-full rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
             <header class="mb-8">
-                <h1 class="text-2xl font-bold">Login</h1>
+                <h1 class="text-2xl font-bold">Sign In</h1>
                 <p class="mt-2 text-sm text-neutral-600">
-                    Masuk menggunakan email dan password.
+                    Sign in using the demo credentials below.
                 </p>
+
+                <div class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700">
+                    <p><strong>Email:</strong> demo@gmail.com</p>
+                    <p><strong>Password:</strong> demo123</p>
+                </div>
             </header>
 
             @if ($errors->any())
@@ -30,8 +35,8 @@
                         Email
                     </label>
 
-                    <input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="you@example.com"
-                        autocomplete="email" autofocus required
+                    <input id="email" name="email" type="email" value="{{ old('email', 'demo@gmail.com') }}"
+                        placeholder="demo@gmail.com" autocomplete="email" autofocus required
                         aria-invalid="@error('email') true @else false @enderror"
                         class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 transition focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-200">
 
@@ -47,7 +52,7 @@
                         Password
                     </label>
 
-                    <input id="password" name="password" type="password" placeholder="••••••••"
+                    <input id="password" name="password" type="password" value="demo123" placeholder="demo123"
                         autocomplete="current-password" required
                         aria-invalid="@error('password') true @else false @enderror"
                         class="w-full rounded-lg border border-neutral-300 px-4 py-2.5 transition focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-200">
@@ -61,7 +66,7 @@
 
                 <button type="submit"
                     class="w-full rounded-lg bg-neutral-900 px-4 py-2.5 font-medium text-white transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400">
-                    Login
+                    Sign In
                 </button>
             </form>
         </section>
