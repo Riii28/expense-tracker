@@ -41,5 +41,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/wallets/{wallet}/transaction/store', [WalletController::class, 'store'])->name('transactions.store');
     Route::get('/wallets/{wallet}/transaction/edit/{transaction}', [WalletController::class, 'edit'])->name('transactions.edit');
     Route::patch('/wallets/{wallet}/transaction/update/{transaction}', [WalletController::class, 'update'])->name('transactions.update');
-    Route::delete('/wallets/{wallet}/transaction/destroy/{transaction}')->name('transactions.destroy');
+    Route::delete('/wallets/{wallet}/transaction/destroy/{transaction}', [WalletController::class, 'destroy'])->name('transactions.destroy');
 });
