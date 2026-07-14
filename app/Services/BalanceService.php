@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use App\Models\Balance;
+use App\Models\User;
 
 class BalanceService
 {
-    public function get(string $id)
+    public function get(User $user): Balance
     {
-        return Balance::findOrFail($id);
+        return $user->balance()->firstOrFail();
     }
 }

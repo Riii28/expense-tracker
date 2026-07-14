@@ -5,39 +5,41 @@ namespace App\Services;
 use App\Enums\TransactionType;
 use App\Models\Balance;
 use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
-    public function getAll()
+    public function getAll(User $user): LengthAwarePaginator
     {
-        return Transaction::query()
+        return $this->balance($user)
+            ->transactions()
             ->latest()
             ->paginate(10)
             ->withQueryString();
     }
 
-    public function getTotal(TransactionType $type): float
+    public function getTotal(User $user, TransactionType $type): float
     {
-        return Transaction::query()
+        return (float) $this->balance($user)
+            ->transactions()
             ->where('type', $type)
             ->sum('amount');
     }
 
-    public function get(string $id, string $balanceId): Transaction
+    public function get(User $user, string $transactionId): Transaction
     {
-        return Transaction::query()
-            ->whereKey($id)
-            ->where('balance_id', $balanceId)
+        return $this->balance($user)
+            ->transactions()
+            ->whereKey($transactionId)
             ->firstOrFail();
     }
 
-    public function store(string $balanceId, array $data): Transaction
+    public function store(User $user, array $data): Transaction
     {
-        return DB::transaction(function () use ($balanceId, $data) {
-            $balance = Balance::query()
-                ->lockForUpdate()
-                ->findOrFail($balanceId);
+        return DB::transaction(function () use ($user, $data) {
+            $balance = $this->balanceForUpdate($user);
 
             $transaction = $balance->transactions()->create($data);
 
@@ -47,45 +49,32 @@ class TransactionService
         });
     }
 
-    public function update(string $id, string $balanceId, array $data): Transaction
+    public function update(User $user, string $transactionId, array $data): Transaction
     {
-        return DB::transaction(function () use ($id, $balanceId, $data) {
-            $balance = Balance::query()
-                ->lockForUpdate()
-                ->findOrFail($balanceId);
+        return DB::transaction(function () use ($user, $transactionId, $data) {
+            $balance = $this->balanceForUpdate($user);
 
-            $transaction = Transaction::query()
-                ->whereKey($id)
-                ->where('balance_id', $balanceId)
+            $transaction = $balance->transactions()
+                ->whereKey($transactionId)
                 ->lockForUpdate()
                 ->firstOrFail();
 
-            // Batalkan pengaruh transaksi lama terhadap saldo.
             $this->revertTransaction($balance, $transaction);
-
-            // Update data transaksi.
             $transaction->update($data);
-
-            // Muat ulang model agar enum/cast ikut diperbarui.
-            $transaction->refresh();
-
-            // Terapkan pengaruh transaksi baru terhadap saldo.
+            $transaction->refresh(); 
             $this->applyTransaction($balance, $transaction);
 
             return $transaction;
         });
     }
-
-    public function delete(string $id, string $balanceId): bool
+  
+    public function delete(User $user, string $transactionId): bool
     {
-        return DB::transaction(function () use ($id, $balanceId) {
-            $balance = Balance::query()
-                ->lockForUpdate()
-                ->findOrFail($balanceId);
+        return DB::transaction(function () use ($user, $transactionId) {
+            $balance = $this->balanceForUpdate($user);
 
-            $transaction = Transaction::query()
-                ->whereKey($id)
-                ->where('balance_id', $balanceId)
+            $transaction = $balance->transactions()
+                ->whereKey($transactionId)
                 ->lockForUpdate()
                 ->firstOrFail();
 
@@ -93,6 +82,19 @@ class TransactionService
 
             return $transaction->delete();
         });
+    }
+
+    private function balance(User $user): Balance
+    {
+        return $user->balance()->firstOrFail();
+    }
+
+    private function balanceForUpdate(User $user): Balance
+    {
+        return Balance::query()
+            ->where('user_id', $user->id)
+            ->lockForUpdate()
+            ->firstOrFail();
     }
 
     private function applyTransaction(Balance $balance, Transaction $transaction): void
