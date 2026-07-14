@@ -18,9 +18,8 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
     <x-ui.header />
 
     <section class="mx-auto mt-8 max-w-3xl px-6">
-        <form action="{{ route('transactions.update', $transaction->id) }}" method="POST"
-            class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-
+        <form action="{{ route('transactions.update', ['wallet' => $wallet, 'transaction'=> $transaction]) }}"
+            method="POST" class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
             @csrf
             @method('PATCH')
 

@@ -16,9 +16,9 @@ class Transaction extends Model
     /** @use HasFactory<\Database\Factories\TransactionFactory> */
     use HasFactory, HasUuids;
 
-    public function balance(): BelongsTo
+    public function wallet(): BelongsTo
     {
-        return $this->belongsTo(Balance::class);
+        return $this->belongsTo(Wallet::class);
     }
 
     protected function casts()

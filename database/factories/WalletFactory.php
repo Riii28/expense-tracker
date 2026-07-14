@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Balance;
+use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Balance>
+ * @extends Factory<Wallet>
  */
-class BalanceFactory extends Factory
+class WalletFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +18,7 @@ class BalanceFactory extends Factory
     public function definition(): array
     {
         return [
-            'amount'=> 1_000_000
+            'balance' => 0
         ];
     }
 }

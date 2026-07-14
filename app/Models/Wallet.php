@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable('amount')]
-class Balance extends Model
+#[Fillable(['name', 'balance'])]
+class Wallet extends Model
 {
-    /** @use HasFactory<\Database\Factories\BalanceFactory> */
+    /** @use HasFactory<\Database\Factories\WalletFactory> */
     use HasFactory, HasUuids;
 
     public function transactions(): HasMany

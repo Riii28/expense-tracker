@@ -13,19 +13,20 @@
         </span>
     </td>
     <td @class(["px-6 py-4 text-right font-semibold", $trxTypeClassText])>
-        Rp {{ number_format($transaction->amount, 0, ',', '.') }}{{$status}}
+        Rp {{ number_format($transaction->amount, 0, ',', '.') }}
     </td>
 
     <td class="px-6 py-4 text-neutral-500">
         {{ $transaction->created_at->format('d M Y') }} </td>
 
     <td class="px-6 py-4 text-right space-x-3">
-        <a href="{{ route('transactions.edit', $transaction->id) }}"
+        <a href="{{ route('transactions.edit', ['wallet' => $wallet, 'transaction'=> $transaction]) }}"
             class="text-sm font-medium text-neutral-700 hover:text-black">
             Edit
         </a>
 
-        <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" class="inline-flex">
+        <form action="{{ route('transactions.destroy', ['wallet' => $wallet, 'transaction'=> $transaction]) }}"
+            method="POST" class="inline-flex">
             @csrf
             @method('DELETE')
 

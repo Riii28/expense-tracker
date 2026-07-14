@@ -3,6 +3,7 @@
 use App\Enums\TransactionCategory;
 use App\Enums\TransactionType;
 use App\Models\Balance;
+use App\Models\Wallet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuidFor(Balance::class)->cascadeOnDelete();
+            $table->foreignUuidFor(Wallet::class)->cascadeOnDelete();
             $table->decimal('amount', 15, 2);
             $table->enum('category', TransactionCategory::values());
             $table->enum('type', TransactionType::values());

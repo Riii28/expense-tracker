@@ -34,8 +34,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function balance(): HasOne
+    public function wallets(): HasMany
     {
-        return $this->hasOne(Balance::class);
+        return $this->hasMany(Wallet::class);
     }
 }

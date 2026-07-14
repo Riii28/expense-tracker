@@ -18,7 +18,7 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
     <x-ui.header />
 
     <section class="mx-auto mt-8 max-w-3xl px-6">
-        <form action="{{ route('transactions.store') }}" method="POST"
+        <form action="{{ route('transactions.store', ['wallet' => $wallet]) }}" method="POST"
             class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
             @csrf
 
@@ -32,7 +32,7 @@ focus:border-neutral-900 focus:outline-none focus:ring-4 focus:ring-neutral-200'
 
                     <input id="amount" name="amount" type="number" min="1" step="0.01" value="{{ old('amount') }}"
                         class="{{ $inputClass }}">
-                        
+
                     @error('amount')
                     <p class="mt-2 text-sm text-red-600">
                         {{ $message }}

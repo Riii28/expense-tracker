@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Balance;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -36,9 +37,9 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function ($user) {
-            Balance::factory()->create([
+            Wallet::factory()->count(3)->create([
                 'user_id' => $user->id,
-                'amount' => 0,
+                'balance' => 0,
             ]);
         });
     }
