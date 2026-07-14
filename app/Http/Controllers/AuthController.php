@@ -26,7 +26,7 @@ class AuthController extends Controller
         }
 
         $loginRequest->session()->regenerate();
-        return redirect()->intended(route('home'));
+        return redirect()->route('home');
     }
 
     public function logout(Request $request)

@@ -16,8 +16,8 @@ class WalletController extends Controller
 
     public function redirect(Request $request)
     {
-        $wallet = $request->user()->wallets->first();
-        return redirect()->route('wallet.show', $wallet);
+        $wallet = $request->user()->wallets()->firstOrFail();
+        return redirect()->route('wallet.show', ['wallet' => $wallet]);
     }
 
     /**
@@ -102,8 +102,11 @@ class WalletController extends Controller
      */
     public function update(TransactionRequest $request, Wallet $wallet, Transaction $transaction)
     {
-        abort_unless($wallet->user_id === $request->user()->id, 404);
-
+        abort_unless(
+            $wallet->user_id === $request->user()->id &&
+                $transaction->wallet_id === $wallet->id,
+            404
+        );
         $data = $request->validated();
         $this->walletService->updateTransaction($wallet, $transaction, $data);
         return redirect()->route('wallet.show', $wallet);
@@ -114,7 +117,12 @@ class WalletController extends Controller
      */
     public function destroy(Request $request, Wallet $wallet, Transaction $transaction)
     {
-        abort_unless($wallet->user_id === $request->user()->id, 404);
+        abort_unless(
+            $wallet->user_id === $request->user()->id &&
+                $transaction->wallet_id === $wallet->id,
+            404
+        );
+
         $this->walletService->deleteTransaction($wallet, $transaction);
         return redirect()->route('wallet.show', $wallet);
     }

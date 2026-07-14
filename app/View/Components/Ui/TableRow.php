@@ -14,6 +14,7 @@ class TableRow extends Component
     public readonly string $trxTypeClassText;
     public readonly string $trxTypeClassBg;
     public readonly string $trxTypeLabel;
+    public readonly string $category;
 
     /**
      * Create a new component instance.
@@ -32,6 +33,13 @@ class TableRow extends Component
                 'bg-green-100',
             ]
         };
+
+        $this->category = $this->normalize($transaction->category->value);
+    }
+
+    public function normalize(string $str)
+    {
+        return str($str)->replace('_', ' ')->title();
     }
 
     /**

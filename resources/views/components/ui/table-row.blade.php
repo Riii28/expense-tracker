@@ -4,7 +4,7 @@
     </td>
 
     <td class="px-6 py-4 text-neutral-600">
-        {{ $transaction->category}}
+        {{ $category}}
     </td>
 
     <td class="px-6 py-4">

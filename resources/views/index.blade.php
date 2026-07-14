@@ -63,7 +63,7 @@
                 </p>
 
                 <h2 class="mt-2 text-3xl font-bold">
-                    Rp {{ number_format($wallet->amount, 0, ',', '.') }}
+                    Rp {{ number_format($wallet->balance, 0, ',', '.') }}
                 </h2>
             </div>
 
